@@ -1,0 +1,856 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>篤月 面试测评</title>
+  <style>
+    :root{
+      --bg:#f6f7fb;
+      --card:#ffffff;
+      --text:#111827;
+      --muted:#6b7280;
+      --border:#e5e7eb;
+      --blue:#2563eb;
+      --blue2:#1d4ed8;
+      --shadow: 0 20px 60px rgba(17,24,39,.08);
+      --radius: 18px;
+      --soft:#f9fafb;
+    }
+    *{ box-sizing:border-box; }
+    body{
+      margin:0;
+      font-family: ui-sans-serif, system-ui, -apple-system, "PingFang SC", "Microsoft YaHei", Arial, sans-serif;
+      background: radial-gradient(1200px 500px at 50% -120px, #ffffff 0%, var(--bg) 60%);
+      color:var(--text);
+      min-height: 100vh;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding: 28px 16px;
+    }
+    .container{ width: min(980px, 100%); }
+    .card{
+      background:var(--card);
+      border:1px solid rgba(229,231,235,.8);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 46px 54px;
+    }
+    @media (max-width: 640px){
+      .card{ padding: 26px 18px; }
+    }
+
+    .hero{ text-align:center; margin-bottom: 24px; }
+    .logo{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      gap:10px;
+      font-weight: 900;
+      letter-spacing: .2px;
+      font-size: 34px;
+      line-height: 1.2;
+    }
+    .logo .mark{
+      width: 34px; height: 34px;
+      border-radius: 10px;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      border: 1px solid var(--border);
+      background: #fff;
+      box-shadow: 0 10px 18px rgba(17,24,39,.06);
+      font-size: 18px;
+    }
+
+    .field{ margin: 14px auto 0; max-width: 680px; }
+    .input, .select, .textarea{
+      width:100%;
+      border:1px solid var(--border);
+      border-radius: 12px;
+      padding: 14px 14px;
+      font-size: 14px;
+      outline: none;
+      background:#fff;
+      transition: border-color .15s ease, box-shadow .15s ease;
+    }
+    .input:focus, .select:focus, .textarea:focus{
+      border-color: rgba(37,99,235,.55);
+      box-shadow: 0 0 0 4px rgba(37,99,235,.12);
+    }
+    .textarea{
+      min-height: 140px;
+      resize: vertical;
+    }
+
+    .row{
+      display:flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      max-width: 680px;
+      margin: 12px auto 0;
+    }
+    .row .col{ flex: 1 1 240px; }
+
+    .btn{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      border: 0;
+      background: var(--blue);
+      color: #fff;
+      border-radius: 10px;
+      padding: 12px 18px;
+      font-size: 15px;
+      font-weight: 800;
+      cursor:pointer;
+      transition: transform .05s ease, background .15s ease;
+      user-select:none;
+      min-width: 160px;
+    }
+    .btn:hover{ background: var(--blue2); }
+    .btn:active{ transform: translateY(1px); }
+    .btn:disabled{ opacity:.55; cursor:not-allowed; }
+
+    .btn.secondary{
+      background:#fff;
+      color: var(--text);
+      border: 1px solid var(--border);
+      font-weight: 800;
+      min-width: auto;
+    }
+    .btn.secondary:hover{ background:#f9fafb; }
+
+    .centerActions{
+      display:flex;
+      justify-content:center;
+      margin-top: 18px;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    /* Question View */
+    .qTop{
+      display:flex;
+      justify-content:space-between;
+      align-items:flex-start;
+      gap: 12px;
+      margin-bottom: 18px;
+    }
+    .qProgress{
+      color: var(--muted);
+      font-size: 13px;
+    }
+    .qTitle{
+      font-size: 28px;
+      font-weight: 900;
+      line-height: 1.3;
+      color: var(--blue);
+      margin: 10px 0 14px;
+      white-space: pre-wrap;
+    }
+    .qActions{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      margin-top: 16px;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    .rightActions{
+      display:flex;
+      gap: 10px;
+      align-items:center;
+      flex-wrap: wrap;
+    }
+    .subHint{
+      margin-top: 10px;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.6;
+      white-space: pre-wrap;
+    }
+
+    /* Thank you */
+    .thanks{ text-align:center; padding: 10px 0 0; }
+    .thanks h2{ margin: 8px 0 6px; font-size: 22px; }
+    .thanks p{ margin: 0; color: var(--muted); line-height: 1.8; }
+
+    /* Admin (hidden / minimal) */
+    .adminWrap{
+      margin-top: 18px;
+      border-top: 1px solid var(--border);
+      padding-top: 14px;
+      max-width: 760px;
+      margin-left:auto;
+      margin-right:auto;
+    }
+    .adminToggle{
+      text-align:center;
+      font-size: 12px;
+      color: var(--muted);
+      user-select:none;
+      cursor:pointer;
+    }
+    .adminPanel{
+      display:none;
+      margin-top: 12px;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 12px;
+      background: var(--soft);
+    }
+    .adminRow{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      align-items:center;
+      justify-content:center;
+      margin-top:10px;
+    }
+    .adminNote{
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.6;
+      white-space: pre-wrap;
+      text-align:left;
+      margin-top:10px;
+    }
+    .adminBox{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      align-items:center;
+      justify-content:center;
+    }
+    .pill{
+      display:inline-block;
+      border:1px solid var(--border);
+      border-radius:999px;
+      padding: 4px 10px;
+      background:#fff;
+      font-size:12px;
+      color:#374151;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <div class="card">
+
+      <!-- START -->
+      <div id="viewStart">
+        <div class="hero">
+          <div class="logo">
+            <span class="mark">🎀</span>
+            <span>篤月面试测评</span>
+          </div>
+        </div>
+
+        <div class="field">
+          <input id="candName" class="input" placeholder="请输入您的姓名" autocomplete="name" />
+        </div>
+
+        <div class="field">
+          <select id="role" class="select">
+            <option value="OPS" selected>运营变现岗（PR+PM 合并）</option>
+            <option value="SALES">销售岗（日本客户）</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <textarea id="candIntro" class="textarea" placeholder="自我描述（建议：你做过什么、负责什么、结果/数据、你擅长什么）"></textarea>
+        </div>
+
+        <div class="centerActions">
+          <button class="btn" id="btnStart">立即开始测评</button>
+          <button class="btn secondary" id="btnClearLocal">清除本地记录</button>
+        </div>
+
+        <!-- Admin entry (very subtle) -->
+        <div class="adminWrap">
+          <div class="adminToggle" id="adminToggleStart">管理员入口</div>
+          <div class="adminPanel" id="adminPanelStart">
+            <div class="adminBox">
+              <input id="adminPwdStart" class="input" style="max-width:260px" placeholder="管理员密码" />
+              <button class="btn secondary" id="btnUnlockStart">解锁</button>
+            </div>
+            <div class="adminRow" id="adminActionsStart" style="display:none;">
+              <span class="pill">已解锁</span>
+              <button class="btn secondary" id="btnResetAllStart">重置全部数据</button>
+            </div>
+            <div class="adminNote">
+说明：管理员功能仅用于复制问答并生成报告。候选人无需操作。
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- QUESTION -->
+      <div id="viewQuestion" style="display:none;">
+        <div class="qTop">
+          <div class="qProgress" id="progressText">Question 1/10</div>
+          <div class="qProgress" id="roleText">运营变现岗</div>
+        </div>
+
+        <div class="qTitle" id="qTitle">题目会显示在这里</div>
+
+        <textarea id="answer" class="textarea" placeholder="在这里输入您的回答..."></textarea>
+
+        <div class="qActions">
+          <button class="btn secondary" id="btnPrev">上一题</button>
+          <div class="rightActions">
+            <button class="btn secondary" id="btnSave">保存</button>
+            <button class="btn" id="btnNext">下一题</button>
+          </div>
+        </div>
+
+        <div class="subHint" id="smallHint"></div>
+
+        <!-- Admin entry (very subtle) -->
+        <div class="adminWrap">
+          <div class="adminToggle" id="adminToggleQ">管理员入口</div>
+          <div class="adminPanel" id="adminPanelQ">
+            <div class="adminBox">
+              <input id="adminPwdQ" class="input" style="max-width:260px" placeholder="管理员密码" />
+              <button class="btn secondary" id="btnUnlockQ">解锁</button>
+            </div>
+
+            <div id="adminActionsQ" style="display:none;">
+              <div class="adminRow">
+                <span class="pill">已解锁</span>
+                <span class="pill" id="followCountPill">追问触发：0/3</span>
+              </div>
+              <div class="adminRow">
+                <button class="btn secondary" id="btnCopyAll">一键复制：提示词 + 问答</button>
+                <button class="btn secondary" id="btnCopyQA">仅复制：问答</button>
+                <button class="btn secondary" id="btnResetAllQ">重置全部数据</button>
+              </div>
+              <div class="adminNote">
+用法：点击复制 → 粘贴到 ChatGPT → 生成详细报告。
+（候选人页面不会联网，不会自动生成报告）
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- THANKS -->
+      <div id="viewThanks" style="display:none;">
+        <div class="thanks">
+          <div class="hero" style="margin-bottom: 10px;">
+            <div class="logo">
+              <span class="mark">🎀</span>
+              <span>测评完成</span>
+            </div>
+          </div>
+          <h2>感谢参与本次测评！</h2>
+          <p>我们会在审核后与您联系。祝你今天顺利：）</p>
+
+          <div class="centerActions" style="margin-top:18px;">
+            <button class="btn secondary" id="btnBackHome">返回首页</button>
+          </div>
+        </div>
+
+        <!-- Admin entry (very subtle) -->
+        <div class="adminWrap">
+          <div class="adminToggle" id="adminToggleThanks">管理员入口</div>
+          <div class="adminPanel" id="adminPanelThanks">
+            <div class="adminBox">
+              <input id="adminPwdThanks" class="input" style="max-width:260px" placeholder="管理员密码" />
+              <button class="btn secondary" id="btnUnlockThanks">解锁</button>
+            </div>
+
+            <div id="adminActionsThanks" style="display:none;">
+              <div class="adminRow">
+                <span class="pill">已解锁</span>
+                <span class="pill" id="followCountPill2">追问触发：0/3</span>
+              </div>
+              <div class="adminRow">
+                <button class="btn secondary" id="btnCopyAll2">一键复制：提示词 + 问答</button>
+                <button class="btn secondary" id="btnCopyQA2">仅复制：问答</button>
+                <button class="btn secondary" id="btnResetAllThanks">重置全部数据</button>
+              </div>
+              <div class="adminNote">
+用法：点击复制 → 粘贴到 ChatGPT → 生成详细报告。
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+
+<script>
+  // ======================
+  // 配置
+  // ======================
+  const STORAGE_KEY = "atsuzuki_full_v1";
+  const ADMIN_PASSWORD = "admin123"; // 你要改密码就在这里改
+  const MAX_FOLLOWUPS = 3;           // 追问最多触发 3 次（全局）
+  const FOLLOW_MODE = "natural";     // ★ 固定为自然模式（不再让候选人选择）
+
+  // ======================
+  // 题库（中文，两大类，各10题；追问按需触发）
+  // ======================
+  const QUESTIONNAIRE = {
+    OPS: [
+      { id:"OPS01", q:"【Case】日本客户希望通过小红书/抖音带来实际变现（到店/预约/下单）。你会如何把目标拆成可执行策略与节奏？", f:"你会把“变现”定义成哪种口径？如何避免目标跑偏？" },
+      { id:"OPS02", q:"同一家店，你会如何区分小红书与抖音的内容打法？（人群/选题/结构/节奏）", f:"你会先验证哪一个关键假设？怎么验证？" },
+      { id:"OPS03", q:"请讲清楚一条15秒探店短视频脚本：开头3秒如何抓人？中段怎么传递信息？结尾怎么引导行动？", f:"如果客户说“什么都要讲”，你怎么取舍？" },
+      { id:"OPS04", q:"你如何筛选适合探店的KOC/KOL？请说3-5个核心判断维度，并说明原因。", f:"你如何识别刷量/虚假数据？" },
+      { id:"OPS05", q:"【Case】同时管理10位达人+2家店的探店项目，你如何设计SOP保证交付不混乱？", f:"哪个环节最容易翻车？你的预案是什么？" },
+      { id:"OPS06", q:"【Case】店家临时加需求（加拍/改脚本/加达人）但预算不变，你如何控范围并推进？", f:"请给一句对客话术（不推锅、能推进、能守边界）。" },
+      { id:"OPS07", q:"内容爆了但转化一般（到店/预约/下单不明显），你会怎么归因并调整？", f:"你优先改“达人类型/内容形式/卖点表达/到店链路”哪一个？为什么？" },
+      { id:"OPS08", q:"客户只关心“有没有效果”，你如何用指标体系解释，并给出下月行动建议？", f:"没有到店数据时，你如何设计替代衡量（闭环）？" },
+      { id:"OPS09", q:"PR产能不足影响排期，你如何协调资源、调整优先级，并保证对客户交付可控？", f:"你会怎么制定SLA/变更规则（范围、时限、返工次数、加急）？" },
+      { id:"OPS10", q:"项目出现重大延期/翻车风险，你汇报时重点放哪里？如何把风险前置并减少不可控？", f:"给出你的“延期说明结构”（事实/影响/补救/预防）。" }
+    ],
+    SALES: [
+      { id:"SAL01", q:"请用30秒向日本客户解释：我们能为他们带来什么（账号运营 + KOC/KOL探店）。不要用空泛营销词。", f:"客户说“我自己也能发SNS”，你怎么回应？" },
+      { id:"SAL02", q:"第一次商谈你会问客户哪些问题？至少8个，并说明每个问题想验证什么。", f:"你怎么判断客户真正想要的是“曝光”还是“变现”？" },
+      { id:"SAL03", q:"【Case】客户说：KOC/KOL效果不可控、担心翻车。你如何建立信任并推进下一步？", f:"你会用哪3个“可控点”降低客户焦虑？" },
+      { id:"SAL04", q:"【Case】客户预算很小但想要明显效果，你怎么设计阶段方案（试点→放量→维护）？", f:"你如何设置可量化预期，避免后续扯皮？" },
+      { id:"SAL05", q:"客户对内容不满意（觉得不高级/不符合品牌），你第一反应是什么？你怎么处理？", f:"你如何在不伤关系的情况下推进“可执行的修改”？" },
+      { id:"SAL06", q:"客户要求“多做一点但不加钱”，你怎么处理？给出你的话术与底线。", f:"你如何把变更/加价规则说得专业且不生硬？" },
+      { id:"SAL07", q:"【Case】商谈后客户两周不回复，你如何跟进既不招人烦又能推进？", f:"你怎么判断该继续追还是放弃？" },
+      { id:"SAL08", q:"你如何和运营团队对齐，避免销售承诺与交付不一致？你会怎么做信息同步？", f:"签约前你会让客户确认哪些关键条款（范围/审核/周期/变更）？" },
+      { id:"SAL09", q:"说一次你推进失败的商机：你怎么复盘？下次会改变什么？", f:"你复盘更看重过程还是结果？为什么？" },
+      { id:"SAL10", q:"你为什么想做日本客户业务？未来1-2年怎么规划？", f:"高压/被拒绝多时，你如何保持稳定？" }
+    ]
+  };
+
+  // ======================
+  // 智能追问触发规则（自然模式）
+  // ======================
+  const EMPTY_WORDS = [
+    "尽量","努力","认真","加强","提升","配合","跟进","优化一下","看情况","全力以赴","尽可能",
+    "多沟通","积极","认真负责","保证完成","做到最好","加强协作","持续优化","不断提升"
+  ];
+  const KEY_SIGNALS = [
+    "指标","数据","SOP","复盘","负责人","时间","里程碑","风险","预算","ROI","成本","方案",
+    "验证","假设","转化","漏斗","优先级","范围","变更","SLA","交付","验收","周期","产出"
+  ];
+  function countHits(text, dict){
+    let hits = 0;
+    dict.forEach(w => { if(text.includes(w)) hits++; });
+    return hits;
+  }
+  function rulePack(role){
+    // natural：你想更严就把 minLen/minSignals 调大
+    return role === "OPS" ? { minLen: 80, minSignals: 2 } : { minLen: 70, minSignals: 2 };
+  }
+  function shouldAskFollowup(role, answer){
+    const a = answer.trim();
+    const r = rulePack(role);
+
+    if(a.length < r.minLen) return { yes:true, reason:`回答偏短（${a.length}字）` };
+
+    const emptyHit = EMPTY_WORDS.find(w => a.includes(w));
+    if(emptyHit) return { yes:true, reason:`表达偏泛（命中「${emptyHit}」）` };
+
+    const signalHits = countHits(a, KEY_SIGNALS);
+    if(signalHits < r.minSignals) return { yes:true, reason:`关键要素不足（命中${signalHits}项）` };
+
+    return { yes:false, reason:"" };
+  }
+
+  // ======================
+  // 状态
+  // ======================
+  let state = {
+    role: "OPS",
+    name: "",
+    intro: "",
+    idx: 0,
+    stage: "main",        // main | followup
+    followReason: "",
+    followCount: 0,       // 已触发追问次数（上限3）
+    suppressedFollowups: [], // 记录：本应追问但因上限未触发（用于报告更可信）
+    answers: {},          // key: QID_main / QID_follow
+    finished: false
+  };
+
+  // ======================
+  // DOM helpers
+  // ======================
+  const $ = (id)=>document.getElementById(id);
+  const viewStart = $("viewStart");
+  const viewQuestion = $("viewQuestion");
+  const viewThanks = $("viewThanks");
+
+  function show(view){
+    viewStart.style.display = "none";
+    viewQuestion.style.display = "none";
+    viewThanks.style.display = "none";
+    view.style.display = "block";
+  }
+  function saveState(){ localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); }
+  function loadState(){
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if(!raw) return;
+    try{ state = JSON.parse(raw); }catch{}
+  }
+  function clearLocal(){ localStorage.removeItem(STORAGE_KEY); }
+
+  function roleLabel(role){
+    return role === "OPS" ? "运营变现岗（PR+PM合并）" : "销售岗（日本客户）";
+  }
+  function questions(){ return QUESTIONNAIRE[state.role] || []; }
+  function getCurrentQ(){ return questions()[state.idx]; }
+  function currentAnswerKey(){
+    const q = getCurrentQ();
+    return (state.stage === "main") ? (q.id + "_main") : (q.id + "_follow");
+  }
+
+  function renderQuestion(){
+    const qs = questions();
+    const q = getCurrentQ();
+    $("progressText").textContent = `Question ${state.idx+1}/${qs.length}`;
+    $("roleText").textContent = roleLabel(state.role);
+
+    if(state.stage === "main"){
+      $("qTitle").textContent = q.q;
+      $("answer").placeholder = "在这里输入您的回答...";
+    }else{
+      $("qTitle").textContent = "追问：" + q.f;
+      $("answer").placeholder = "请补充更具体的细节（数字/步骤/负责人/时间/风险）...";
+    }
+
+    $("answer").value = state.answers[currentAnswerKey()] || "";
+    $("btnPrev").disabled = (state.idx === 0 && state.stage === "main");
+    $("btnNext").textContent = (state.idx === qs.length - 1 && state.stage === "main") ? "提交" : "下一题";
+
+    // 候选人不显示任何解释；管理员会看到追问计数
+    $("smallHint").textContent = "";
+    refreshAdminPills();
+  }
+
+  function saveCurrent(){
+    state.answers[currentAnswerKey()] = $("answer").value;
+    saveState();
+    refreshAdminPills();
+  }
+  function requireAnswer(){
+    const v = $("answer").value.trim();
+    if(!v){
+      alert("请先填写回答。");
+      return false;
+    }
+    return true;
+  }
+
+  // ======================
+  // Admin: UI show/hide
+  // ======================
+  function togglePanel(panelId){
+    const panel = $(panelId);
+    panel.style.display = (panel.style.display === "block") ? "none" : "block";
+  }
+  function unlock(pwdInputId, actionsId){
+    const pwd = $(pwdInputId).value;
+    if(pwd !== ADMIN_PASSWORD){
+      alert("密码错误");
+      return false;
+    }
+    $(actionsId).style.display = "block";
+    refreshAdminPills();
+    return true;
+  }
+  function refreshAdminPills(){
+    const pill1 = $("followCountPill");
+    const pill2 = $("followCountPill2");
+    if(pill1) pill1.textContent = `追问触发：${state.followCount}/${MAX_FOLLOWUPS}`;
+    if(pill2) pill2.textContent = `追问触发：${state.followCount}/${MAX_FOLLOWUPS}`;
+  }
+
+  // ======================
+  // Admin: report copy
+  // ======================
+  function reportPrompt(){
+    return `你是资深面试官 + 组织心理顾问 + 用人经理。
+我们公司在日本，面向日本客户做两类业务：
+1）账号运营（小红书/抖音），通过内容与增长帮助客户变现
+2）招募KOC/KOL到店探店并发布SNS内容做宣传，交付内容质量与数据复盘
+
+现在我会给你候选人的“岗位信息 + 10题完整问答记录（含可能触发的追问）”。
+请生成一份【非常详细、可解释、可追溯证据】的面试评估报告。
+
+【硬性要求：必须全部满足】
+A. 报告必须包含“完整题目+完整回答原文”（逐题列出）
+B. 每一道题都要输出：
+   1) 本题考察目的（能力/风险点）
+   2) 回答倾向：反映了什么性格/思维方式/价值观（具体）
+   3) 逻辑与证据漏洞：因果跳跃、缺数据、空话、过度承诺、风险忽略等（无漏洞也要写优点）
+   4) 二面追问建议（1-2条）
+C. 多维度评分（五星★★★★★满分），每个维度必须写“依据”，并引用题号：
+   - 逻辑结构
+   - 执行落地
+   - 数据&复盘
+   - 沟通协作（含对客）
+   - 风险与边界意识
+   - 稳定性/抗压
+   - （销售岗额外）客户心理洞察与推进能力
+D. 优势Top3与弱势Top3：每条必须引用证据（Q几 + 哪些回答特征）
+E. 过往经验画像推断：必须标注“推断”，给置信度（高/中/低）+ 依据
+F. 最终录用建议：强推/可培养/谨慎/不建议 + 原因 + 风险提示 + 培养建议
+
+【输出结构（按标题）】
+1. 候选人概览
+2. 面试完整记录（Q1-A1...含追问）
+3. 逐题评估（目的/倾向/漏洞/追问建议）
+4. 多维度评分（五星+依据）
+5. 优势Top3（证据）
+6. 弱势Top3（证据）
+7. 经验画像推断（推断+置信度+依据）
+8. 录用建议与风险提示
+
+语言：中文，风格务实，不要空话，不要吹捧。`;
+  }
+
+  function buildQA(){
+    const qs = questions();
+    const lines = [];
+
+    lines.push(`【岗位】${roleLabel(state.role)}`);
+    lines.push(`【候选人姓名】${state.name || "未填写"}`);
+    lines.push(`【自我描述】${(state.intro || "未填写").trim()}`);
+    lines.push(`【追问触发次数】${state.followCount}/${MAX_FOLLOWUPS}`);
+
+    if(state.suppressedFollowups?.length){
+      lines.push(`【追问上限抑制记录】`);
+      state.suppressedFollowups.forEach((x, i)=>{
+        lines.push(`- ${i+1}. ${x.qid}（原因：${x.reason}）`);
+      });
+    }
+
+    lines.push("");
+    lines.push("【面试问答】");
+
+    qs.forEach((q, i)=>{
+      const mainKey = q.id + "_main";
+      const followKey = q.id + "_follow";
+      const mainAns = (state.answers[mainKey] || "").trim() || "（未作答）";
+      const followAns = (state.answers[followKey] || "").trim();
+
+      lines.push(`Q${i+1}：${q.q}`);
+      lines.push(`A${i+1}：${mainAns}`);
+
+      if(followAns){
+        lines.push(`追问：${q.f}`);
+        lines.push(`追问回答：${followAns}`);
+      }
+      lines.push("");
+    });
+
+    return lines.join("\n");
+  }
+
+  async function copyText(text){
+    try{
+      await navigator.clipboard.writeText(text);
+      alert("已复制到剪贴板。");
+    }catch(e){
+      const ta = document.createElement("textarea");
+      ta.value = text;
+      document.body.appendChild(ta);
+      ta.select();
+      document.execCommand("copy");
+      document.body.removeChild(ta);
+      alert("已复制到剪贴板（兼容模式）。");
+    }
+  }
+
+  function copyAll(){
+    const text = `${reportPrompt()}\n\n-----\n\n现在请基于以下问答生成报告：\n\n${buildQA()}`;
+    copyText(text);
+  }
+  function copyQAOnly(){
+    copyText(buildQA());
+  }
+
+  // ======================
+  // Events: Candidate flow
+  // ======================
+  $("btnStart").addEventListener("click", ()=>{
+    const name = $("candName").value.trim();
+    if(!name){
+      alert("请先输入姓名。");
+      return;
+    }
+
+    state.name = name;
+    state.role = $("role").value;
+    state.intro = $("candIntro").value.trim();
+
+    state.idx = 0;
+    state.stage = "main";
+    state.followReason = "";
+    state.followCount = 0;
+    state.suppressedFollowups = [];
+    state.answers = {};
+    state.finished = false;
+
+    saveState();
+    show(viewQuestion);
+    renderQuestion();
+  });
+
+  $("btnClearLocal").addEventListener("click", ()=>{
+    if(confirm("确定清除本地记录吗？")){
+      clearLocal();
+      location.reload();
+    }
+  });
+
+  $("btnSave").addEventListener("click", ()=>{
+    if(!requireAnswer()) return;
+    saveCurrent();
+    alert("已保存");
+  });
+
+  $("btnPrev").addEventListener("click", ()=>{
+    saveCurrent();
+
+    // 追问阶段：回到主问（同一题）
+    if(state.stage === "followup"){
+      state.stage = "main";
+      saveState();
+      renderQuestion();
+      return;
+    }
+
+    // 主问阶段：上一题
+    state.idx = Math.max(0, state.idx - 1);
+    state.stage = "main";
+    saveState();
+    renderQuestion();
+  });
+
+  $("btnNext").addEventListener("click", ()=>{
+    if(!requireAnswer()) return;
+
+    const qs = questions();
+    const q = getCurrentQ();
+    const txt = $("answer").value.trim();
+
+    saveCurrent();
+
+    if(state.stage === "main"){
+      // 判断是否触发追问（但最多3次）
+      const judge = shouldAskFollowup(state.role, txt);
+
+      if(judge.yes){
+        if(state.followCount < MAX_FOLLOWUPS){
+          state.stage = "followup";
+          state.followReason = judge.reason;
+          state.followCount += 1;
+          saveState();
+          renderQuestion();
+          return;
+        }else{
+          // 已达到上限：记录“本应追问但被抑制”
+          state.suppressedFollowups.push({ qid: q.id, reason: judge.reason });
+          saveState();
+        }
+      }
+
+      // 不追问/或抑制：进入下一题或结束
+      if(state.idx === qs.length - 1){
+        state.finished = true;
+        saveState();
+        show(viewThanks);
+        refreshAdminPills();
+        return;
+      }
+
+      state.idx += 1;
+      state.stage = "main";
+      state.followReason = "";
+      saveState();
+      renderQuestion();
+      return;
+    }
+
+    // 追问阶段：答完直接下一题或结束
+    if(state.stage === "followup"){
+      if(state.idx === qs.length - 1){
+        state.finished = true;
+        state.stage = "main";
+        state.followReason = "";
+        saveState();
+        show(viewThanks);
+        refreshAdminPills();
+        return;
+      }
+
+      state.idx += 1;
+      state.stage = "main";
+      state.followReason = "";
+      saveState();
+      renderQuestion();
+    }
+  });
+
+  $("answer").addEventListener("keydown", (e)=>{
+    if(e.key === "Enter" && (e.ctrlKey || e.metaKey)){
+      e.preventDefault();
+      $("btnNext").click();
+    }
+  });
+
+  $("btnBackHome").addEventListener("click", ()=>{
+    // 这里不自动清除，避免管理员复制前丢失数据
+    // 如果你想返回即清除，把下面两行取消注释即可：
+    // clearLocal();
+    location.reload();
+  });
+
+  // ======================
+  // Events: Admin panels
+  // ======================
+  $("adminToggleStart").addEventListener("click", ()=>togglePanel("adminPanelStart"));
+  $("adminToggleQ").addEventListener("click", ()=>togglePanel("adminPanelQ"));
+  $("adminToggleThanks").addEventListener("click", ()=>togglePanel("adminPanelThanks"));
+
+  $("btnUnlockStart").addEventListener("click", ()=>{
+    if(unlock("adminPwdStart","adminActionsStart")){ /* ok */ }
+  });
+  $("btnUnlockQ").addEventListener("click", ()=>{
+    if(unlock("adminPwdQ","adminActionsQ")){ /* ok */ }
+  });
+  $("btnUnlockThanks").addEventListener("click", ()=>{
+    if(unlock("adminPwdThanks","adminActionsThanks")){ /* ok */ }
+  });
+
+  function resetAll(){
+    if(confirm("确定重置全部数据吗？（会清空候选人答案）")){
+      clearLocal();
+      location.reload();
+    }
+  }
+  $("btnResetAllStart").addEventListener("click", resetAll);
+  $("btnResetAllQ").addEventListener("click", resetAll);
+  $("btnResetAllThanks").addEventListener("click", resetAll);
+
+  $("btnCopyAll").addEventListener("click", copyAll);
+  $("btnCopyQA").addEventListener("click", copyQAOnly);
+  $("btnCopyAll2").addEventListener("click", copyAll);
+  $("btnCopyQA2").addEventListener("click", copyQAOnly);
+
+  // ======================
+  // Init
+  // ======================
+  loadState();
+  show(viewStart);
+
+  // 如果你想“刷新后继续答题”，可以改成：
+  // if(state && state.name && !state.finished && Object.keys(state.answers||{}).length){ show(viewQuestion); renderQuestion(); }
+  // 但为避免候选人困惑，这里默认回到首页。
+</script>
+</body>
+</html>
